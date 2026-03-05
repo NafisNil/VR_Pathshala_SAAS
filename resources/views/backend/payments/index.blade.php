@@ -1,6 +1,6 @@
 @extends('backend.layouts.master')
 @section('title')
-Users - Index
+Payments - Index
 @endsection
 @section('content')
 
@@ -15,12 +15,12 @@ Users - Index
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6">
-                <h3 class="mb-0">Users</h3>
+                <h3 class="mb-0">Payments</h3>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Users</li>
+                  <li class="breadcrumb-item active" aria-current="page">Payments</li>
                   
                 </ol>
               </div>
@@ -39,28 +39,35 @@ Users - Index
               <div class="col-md-12">
                 <div class="card mb-4">
                   <div class="card-header">
-                    <h3 class="card-title">Users</h3>
+                    <h3 class="card-title">Payments</h3>
                   </div>
                   <!-- Filter section -->
                   <div class="card-body border-bottom">
                     <form id="filter-form" class="row g-3">
-                      <div class="col-md-3">
-                        <input type="text" name="name" id="filter-name" class="form-control" placeholder="Filter by Name">
+                      <div class="col-md-2">
+                        <input type="text" name="username" id="filter-username" class="form-control" placeholder="User Name">
                       </div>
-                      <div class="col-md-3">
-                        <input type="text" name="email" id="filter-email" class="form-control" placeholder="Filter by Email">
+                      <div class="col-md-2">
+                        <input type="text" name="plan" id="filter-plan" class="form-control" placeholder="Plan Name">
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2">
+                        <input type="text" name="transaction_id" id="filter-transaction_id" class="form-control" placeholder="Transaction ID">
+                      </div>
+                      <div class="col-md-2">
+                        <input type="text" name="payment_method" id="filter-payment_method" class="form-control" placeholder="Method (e.g. stripe)">
+                      </div>
+                      <div class="col-md-2">
                         <select name="status" id="filter-status" class="form-select">
-                          <option value="">All Statuses</option>
-                          <option value="active">Active</option>
-                          <option value="suspended">Suspended</option>
+                          <option value="">Status</option>
+                          <option value="completed">Completed</option>
                           <option value="pending">Pending</option>
+                          <option value="failed">Failed</option>
+                          <option value="refunded">Refunded</option>
                         </select>
                       </div>
-                      <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <button type="button" id="reset-filter" class="btn btn-secondary">Reset</button>
+                      <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-sm mt-1">Filter</button>
+                        <button type="button" id="reset-filter" class="btn btn-secondary btn-sm mt-1">Reset</button>
                       </div>
                     </form>
                   </div>
@@ -71,17 +78,17 @@ Users - Index
                       <thead>
                         <tr>
                           <th style="width: 10px">#</th>
-                          <th>Name</th>
-                          <th>Email</th>
-                          <th>Device ID</th>
-                          <th>Device Model</th>
-                          <th>Recent OTP</th>
+                          <th>User name</th>
+                          <th>Plan </th>
+                          <th>Amount</th>
+                          <th>Transaction ID</th>
+                          <th>Payment Method</th>
                           <th>Status</th>
                           <th style="width: 40px">Actions</th>
                         </tr>
                       </thead>
-                      <tbody id="user-table-body">
-                        @include('backend.users.partials.user_table')
+                      <tbody id="payment-table-body">
+                        @include('backend.payments.partials.payment_table')
                       </tbody>
                     </table>
                   </div>
@@ -121,61 +128,39 @@ Users - Index
         <!--end::App Content-->
       </main>
       <!--end::App Main-->
+
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
     $(document).ready(function() {
-      function attachStatusBtnEvent() {
-        $('.status-btn').off('click').on('click', function(e) {
-          e.preventDefault();
-          var url = $(this).attr('href');
-          var message = $(this).data('message');
-
-          Swal.fire({
-            title: 'Are you sure?',
-            text: "You want to " + message + "?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, proceed!'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = url;
-            }
-          });
-        });
-      }
-
-      attachStatusBtnEvent();
-
-      function fetchUsers() {
+      function fetchPayments() {
         $.ajax({
-          url: "{{ route('users.index') }}",
+          url: "{{ route('payments.index') }}",
           type: "GET",
           data: {
-            name: $('#filter-name').val(),
-            email: $('#filter-email').val(),
+            username: $('#filter-username').val(),
+            plan: $('#filter-plan').val(),
+            transaction_id: $('#filter-transaction_id').val(),
+            payment_method: $('#filter-payment_method').val(),
             status: $('#filter-status').val()
           },
           success: function(response) {
-            $('#user-table-body').html(response);
-            attachStatusBtnEvent();
+            $('#payment-table-body').html(response);
           }
         });
       }
 
       $('#filter-form').on('submit', function(e) {
         e.preventDefault();
-        fetchUsers();
+        fetchPayments();
       });
 
-      $('#filter-name, #filter-email, #filter-status').on('keyup change', function() {
-        fetchUsers();
+      $('#filter-username, #filter-plan, #filter-transaction_id, #filter-payment_method, #filter-status').on('keyup change', function() {
+        fetchPayments();
       });
 
       $('#reset-filter').on('click', function() {
         $('#filter-form')[0].reset();
-        fetchUsers();
+        fetchPayments();
       });
     });
     </script>

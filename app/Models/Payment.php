@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Plan;
 use App\Models\Subscription;
 
 class Payment extends Model
@@ -28,4 +29,11 @@ class Payment extends Model
     {
         return $this->belongsTo(Subscription::class, 'plan_id', 'id');
     }
+
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class, 'plan_id', 'id');
+    }
+
+    
 }

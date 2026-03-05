@@ -44,10 +44,10 @@
                           <th>Email</th>
                           <td>{{ $user->email }}</td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                           <th>Phone</th>
                           <td>{{ $user->phone ?? 'N/A' }}</td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                           <th>Status</th>
                           <td>
@@ -88,7 +88,7 @@
                             <th>Device ID</th>
                             <td>{{ $user->device->device_id ?? 'N/A' }}</td>
                           </tr>
-                          <tr>
+                          {{-- <tr>
                             <th>Last Login IP</th>
                             <td>{{ $user->device->ip_address ?? 'N/A' }}</td>
                           </tr>
@@ -101,7 +101,7 @@
                                 <span class="badge bg-danger">Logged Out</span>
                               @endif
                             </td>
-                          </tr>
+                          </tr> --}}
                         @else
                           <tr>
                             <td colspan="2" class="text-center text-muted py-4">No device registered for this user</td>
@@ -127,7 +127,7 @@
                       <div class="row align-items-center p-3">
                         <div class="col-md-6">
                             <h5><strong>Plan Name:</strong> {{ $currentSubscription->plan->name ?? 'N/A' }}</h5>
-                            <p class="mb-1"><strong>Price:</strong> {{ config('app.currency_symbol', '₹') }}{{ $currentSubscription->price ?? 0 }}</p>
+                            <p class="mb-1"><strong>Price:</strong> {{ config('app.currency_symbol', '$') }}{{ $currentSubscription->plan->price ?? 0 }}</p>
                             <p class="mb-0"><strong>Status:</strong> 
                                 @if($currentSubscription->status == 'active')
                                     <span class="badge bg-success">Active</span>
@@ -139,8 +139,8 @@
                             </p>
                         </div>
                         <div class="col-md-6 text-md-end">
-                            <p class="mb-1"><strong>Started At:</strong> {{ \Carbon\Carbon::parse($currentSubscription->start_date)->format('M d, Y') }}</p>
-                            <p class="mb-0"><strong>Expires At:</strong> {{ \Carbon\Carbon::parse($currentSubscription->end_date)->format('M d, Y') }}</p>
+                            <p class="mb-1"><strong>Started At:</strong> {{ \Carbon\Carbon::parse($currentSubscription->started_at)->format('M d, Y') }}</p>
+                            <p class="mb-0"><strong>Expires At:</strong> {{ \Carbon\Carbon::parse($currentSubscription->expires_at)->format('M d, Y') }}</p>
                         </div>
                       </div>
                     @else
@@ -173,7 +173,7 @@
                           <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $payment->transaction_id ?? 'N/A' }}</td>
-                            <td>{{ config('app.currency_symbol', '₹') }}{{ $payment->amount }}</td>
+                            <td>{{ config('app.currency_symbol', '$') }}{{ $payment->amount }}</td>
                             <td>{{ ucfirst($payment->payment_method ?? 'N/A') }}</td>
                             <td>
                                 @if($payment->status == 'success' || $payment->status == 'paid')

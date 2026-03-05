@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Subscription;
+use App\Models\Payment;
 use App\Models\Deviceinfo as Device;
 use Illuminate\Support\Facades\DB;
 
@@ -17,9 +19,28 @@ class HomeController extends Controller
 
 
     //user routes
-    public function users()
+    public function users(Request $request)
     {
-        $user = User::with('device')->where('role', 'user')->get();
+        $query = User::with('device')->where('role', 'user');
+
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $user = $query->get();
+
+        if ($request->ajax()) {
+            return view('backend.users.partials.user_table', compact('user'))->render();
+        }
+
         return view('backend.users.index', compact('user'));
     }
 
@@ -47,6 +68,68 @@ class HomeController extends Controller
         return view('backend.users.show', compact('user'));
     }
 
+
+    //subscription routes
+    public function subscriptions(Request $request)
+    {
+        $query = Subscription::with(['user', 'plan'])->latest();
+
+        if ($request->filled('username')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->username . '%');
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $subscriptions = $query->get();
+
+        if ($request->ajax()) {
+            return view('backend.subscriptions.partials.subscription_table', compact('subscriptions'))->render();
+        }
+            
+        return view('backend.subscriptions.index', compact('subscriptions'));
+    }
+
+    //payment routes
+    public function payments(Request $request)
+    {
+        $query = Payment::with(['user', 'plan'])->latest();
+
+        if ($request->filled('username')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->username . '%');
+            });
+        }
+
+        if ($request->filled('plan')) {
+            $query->whereHas('plan', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->plan . '%');
+            });
+        }
+
+        if ($request->filled('transaction_id')) {
+            $query->where('transaction_id', 'like', '%' . $request->transaction_id . '%');
+        }
+
+        if ($request->filled('payment_method')) {
+            $query->where('payment_method', 'like', '%' . $request->payment_method . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $payments = $query->get();
+
+        if ($request->ajax()) {
+            return view('backend.payments.partials.payment_table', compact('payments'))->render();
+        }
+
+        return view('backend.payments.index', compact('payments'));
+    }
     
 
 

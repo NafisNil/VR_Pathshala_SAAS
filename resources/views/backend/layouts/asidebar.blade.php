@@ -60,6 +60,48 @@
                 </ul>
               </li>
 
+              <li class="nav-item {{ in_array($routeName, ['subscriptions.index']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['subscriptions.index']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Subscriptions
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('subscriptions.index') }}" class="nav-link {{ $routeName === 'subscriptions.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>All Subscriptions</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+              <li class="nav-item {{ in_array($routeName, ['payments.index']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['payments.index']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Payments
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('payments.index') }}" class="nav-link {{ $routeName === 'payments.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>All Payments</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+              <hr>
+
               <li class="nav-item {{ in_array($routeName, ['plans.index', 'plans.create', 'plans.edit']) ? 'menu-open' : '' }}">
                
                 <a href="#" class="nav-link {{ in_array($routeName, ['plans.index', 'plans.create', 'plans.edit']) ? 'menu-open' : '' }}">
@@ -79,7 +121,7 @@
 
                 </ul>
               </li>
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-filetype-js"></i>
                   <p>
@@ -95,7 +137,7 @@
                     </a>
                   </li>
                 </ul>
-              </li>
+              </li> --}}
      
             </ul>
             <!--end::Sidebar Menu-->

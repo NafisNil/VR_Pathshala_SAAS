@@ -34,6 +34,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/make-user-suspended/{id}', [HomeController::class, 'makeUserSuspended'])->name('users.makeUserSuspended');
     Route::get('/make-user-active/{id}', [HomeController::class, 'makeUserActive'])->name('users.makeUserActive');
 
+    //subscription routes
+    Route::get('/subscriptions', [HomeController::class, 'subscriptions'])->name('subscriptions.index');
+
+    //payment routes
+    Route::get('/payments', [HomeController::class, 'payments'])->name('payments.index');
+
 
 });
 

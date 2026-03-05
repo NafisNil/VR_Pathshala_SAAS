@@ -1,6 +1,6 @@
 @extends('backend.layouts.master')
 @section('title')
-Users - Index
+Subscription - Index
 @endsection
 @section('content')
 
@@ -15,12 +15,12 @@ Users - Index
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6">
-                <h3 class="mb-0">Users</h3>
+                <h3 class="mb-0">Subscription</h3>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Users</li>
+                  <li class="breadcrumb-item active" aria-current="page">Subscription</li>
                   
                 </ol>
               </div>
@@ -39,26 +39,24 @@ Users - Index
               <div class="col-md-12">
                 <div class="card mb-4">
                   <div class="card-header">
-                    <h3 class="card-title">Users</h3>
+                    <h3 class="card-title">Subscription</h3>
+                       
                   </div>
                   <!-- Filter section -->
                   <div class="card-body border-bottom">
                     <form id="filter-form" class="row g-3">
-                      <div class="col-md-3">
-                        <input type="text" name="name" id="filter-name" class="form-control" placeholder="Filter by Name">
+                      <div class="col-md-4">
+                        <input type="text" name="username" id="filter-username" class="form-control" placeholder="Filter by User Name">
                       </div>
-                      <div class="col-md-3">
-                        <input type="text" name="email" id="filter-email" class="form-control" placeholder="Filter by Email">
-                      </div>
-                      <div class="col-md-3">
+                      <div class="col-md-4">
                         <select name="status" id="filter-status" class="form-select">
                           <option value="">All Statuses</option>
                           <option value="active">Active</option>
-                          <option value="suspended">Suspended</option>
-                          <option value="pending">Pending</option>
+                          <option value="inactive">Inactive</option>
+                          <option value="cancelled">Cancelled</option>
                         </select>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-4">
                         <button type="submit" class="btn btn-primary">Filter</button>
                         <button type="button" id="reset-filter" class="btn btn-secondary">Reset</button>
                       </div>
@@ -71,17 +69,17 @@ Users - Index
                       <thead>
                         <tr>
                           <th style="width: 10px">#</th>
-                          <th>Name</th>
-                          <th>Email</th>
-                          <th>Device ID</th>
-                          <th>Device Model</th>
-                          <th>Recent OTP</th>
+                          <th>User Name</th>
+                          <th>Plan Name</th>
+                          <th>Start Date</th>
+                          <th>End Date</th>
+                          <th>Price</th>
                           <th>Status</th>
                           <th style="width: 40px">Actions</th>
                         </tr>
                       </thead>
-                      <tbody id="user-table-body">
-                        @include('backend.users.partials.user_table')
+                      <tbody id="subscription-table-body">
+                        @include('backend.subscriptions.partials.subscription_table')
                       </tbody>
                     </table>
                   </div>
@@ -121,61 +119,36 @@ Users - Index
         <!--end::App Content-->
       </main>
       <!--end::App Main-->
+
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
     $(document).ready(function() {
-      function attachStatusBtnEvent() {
-        $('.status-btn').off('click').on('click', function(e) {
-          e.preventDefault();
-          var url = $(this).attr('href');
-          var message = $(this).data('message');
-
-          Swal.fire({
-            title: 'Are you sure?',
-            text: "You want to " + message + "?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, proceed!'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = url;
-            }
-          });
-        });
-      }
-
-      attachStatusBtnEvent();
-
-      function fetchUsers() {
+      function fetchSubscriptions() {
         $.ajax({
-          url: "{{ route('users.index') }}",
+          url: "{{ route('subscriptions.index') }}",
           type: "GET",
           data: {
-            name: $('#filter-name').val(),
-            email: $('#filter-email').val(),
+            username: $('#filter-username').val(),
             status: $('#filter-status').val()
           },
           success: function(response) {
-            $('#user-table-body').html(response);
-            attachStatusBtnEvent();
+            $('#subscription-table-body').html(response);
           }
         });
       }
 
       $('#filter-form').on('submit', function(e) {
         e.preventDefault();
-        fetchUsers();
+        fetchSubscriptions();
       });
 
-      $('#filter-name, #filter-email, #filter-status').on('keyup change', function() {
-        fetchUsers();
+      $('#filter-username, #filter-status').on('keyup change', function() {
+        fetchSubscriptions();
       });
 
       $('#reset-filter').on('click', function() {
         $('#filter-form')[0].reset();
-        fetchUsers();
+        fetchSubscriptions();
       });
     });
     </script>
