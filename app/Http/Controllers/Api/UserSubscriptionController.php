@@ -22,10 +22,15 @@ class UserSubscriptionController extends Controller
 
         $subscription = Subscription::where('user_id', $user->id)->where('status', 'active')->first();
 
-        if ($subscription) {
+        if ($subscription && $subscription->expires_at < now()) {
+            $subscription->status = 'expired';
+            $subscription->save();
+        }
+
+         if ($subscription && $subscription->status === 'active') {
             return response()->json([
                 'subscribed' => true,
-                'plan' => $subscription->plan_id,
+                'planName' => $subscription->plan->name,
                 'expires_at' => $subscription->expires_at,
             ]);
         } else {
@@ -34,6 +39,8 @@ class UserSubscriptionController extends Controller
             ]);
         }
     }
+
+        
 
 
     public function makeSubscription(Request $request)

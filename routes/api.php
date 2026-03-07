@@ -28,6 +28,9 @@ Route::post('/unlink-device-confirm', [AuthController::class, 'unlinkDeviceConfi
 Route::get('/check-subscription', [UserSubscriptionController::class, 'checkSubscription']);
 Route::post('/make-subscription', [UserSubscriptionController::class, 'makeSubscription']);
 
+//user info
+Route::get('/user-info', [AuthController::class, 'userInfo']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     // Protected routes for authenticated users

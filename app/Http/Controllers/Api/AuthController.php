@@ -11,7 +11,8 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OTPVerificationMail as OTPMail;
 
 
 class AuthController extends Controller
@@ -32,6 +33,8 @@ class AuthController extends Controller
                 'password' => bcrypt($request->password),
                 'otp' => rand(100000, 999999),
             ]);
+
+            Mail::to($user->email)->send(new OTPMail([$user->otp, $user->name]));
 
             $device = Device::create([
                 'user_id' => $user->id,
@@ -65,29 +68,43 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = \App\Models\User::where('email', $request->email)->firstOrFail();
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        $device = Device::where('user_id', $user->id)->firstOrFail();
-
-        if ($device->device_id == $request->device_id && $device->device_model == $request->device_model) {
-            # code...
+        $user = \App\Models\User::where('email', $request->email)->first();
+        if(!$user){
             return response()->json([
+                'status' => 'error',
+                'message' => 'User not found',
+            ], 404);
+        }else if($user->status != 'active'){
+                return response()->json([
+                    'status' => 'unverified',
+                    'message' => 'User not active',
+                    'email' => $user->email
+                ], 200);
+        }else if ($user->status == 'active') {
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            $device = Device::where('user_id', $user->id)->firstOrFail();
+            $request_device_id = $user->id . '-' . $request->device_id;
+
+            if ($device->device_id == $request_device_id && $device->device_model == $request->device_model) {
+                # code...
+                return response()->json([
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                    'status' => 'verified_same_device',
+                    'message' => 'Logged in successfully from the same device',
+                    'email' => $user->email
+                ]);
+            }else{
+                return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'status' => 'success',
-                'message' => 'Logged in successfully from the same device',
-            ]);
-        }else{
-            return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'status' => 'success',
-            'message' => 'Logged in successfully from a new device',
-            ]);
+                'status' => 'verified_new_device',
+                'message' => 'Logged in successfully from a new device',
+                'email' => $user->email
+                ]);
+            }
         }
-
         
     }
 
@@ -101,11 +118,15 @@ class AuthController extends Controller
         ]);
 
         $user = \App\Models\User::where('email', $request->email)->firstOrFail();
+        $device = Device::where('user_id', $user->id)->firstOrFail();
 
         if ($user->otp == $request->otp) {
             $user->otp = null;
             $user->status = 'active';
             $user->save();
+            $device->device_id = $user->id . '-' . ($request->device_id ?? Str::random(64));
+            $device->device_model = $request->device_model ?? 'Unknown';
+            $device->save();
             return response()->json([
                 'status' => 'success',
                 'message' => 'OTP verified successfully',
@@ -131,9 +152,13 @@ class AuthController extends Controller
         $this->checkActive($user);
         $user->otp = rand(100000, 999999);
         $user->save();
+
+        Mail::to($user->email)->send(new OTPMail([$user->otp, $user->name]));
+
         return response()->json([
             'status' => 'success',
             'message' => 'OTP sent to your email for device unlinking',
+            'email' => $user->email
         ]);
     }
 
@@ -158,11 +183,13 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Device unlinked successfully',
+                'email' => $user->email
             ]);
         } else {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid OTP',
+                'email' => $user->email
             ], 400);
         }
     }
@@ -172,9 +199,28 @@ class AuthController extends Controller
     {
         if (!$user) {
           abort(response()->json([
-            'status' => 'error',
+            'status' => 'unverified',
             'message' => 'User not found or inactive',
-            ]), 404);
+            'user_email' => $user ? $user->email : null
+
+            ]), 403);
         }
+    }
+
+
+    //get user info
+    public function userInfo(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+        ]);
+
+        $user = User::where('email', $request->email)->where('status', 'active')->firstOrFail();
+        return response()->json([
+            'name' => $user->name,
+            'email' => $user->email,
+            'status' => $user->status,
+            'success' => true
+        ]);
     }
 }
