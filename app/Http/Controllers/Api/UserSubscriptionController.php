@@ -65,8 +65,8 @@ class UserSubscriptionController extends Controller
             $payment = Payment::create([
                 'user_id' => $user->id,
                 'plan_id' => $request->plan_id,
-               // 'amount' => $subscription->plan->price,
-                 'amount' => 9.99, // For testing, you can replace this with the actual plan price
+                'amount' => $subscription->plan->price,
+                // 'amount' => 9.99, // For testing, you can replace this with the actual plan price
                 'transaction_id' => 'txn_' . uniqid(),
                 'payment_method' => 'credit_card',
                 'currency' => 'USD',
@@ -78,7 +78,9 @@ class UserSubscriptionController extends Controller
 
         return response()->json([
             'message' => 'Subscription created successfully',
-            'subscription' => $subscription,
+            'status' => 'success',
+            'planName' => $subscription->plan->name,
+            'expires_at' => $subscription->expires_at,
         ]);
     }
 
