@@ -27,6 +27,7 @@
                           value="{!!old('duration',@$plan->duration)!!}"
                           name="duration" required
                         />
+                      </div>
 
 
                         <div class="mb-3">
@@ -38,6 +39,7 @@
                           value="{!!old('price',@$plan->price)!!}"
                           name="price" required
                         />
+                        </div>
 
                     </div>
                     <!--end::Body-->

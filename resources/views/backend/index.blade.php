@@ -37,9 +37,9 @@
                 <!--begin::Small Box Widget 1-->
                 <div class="small-box text-bg-primary">
                   <div class="inner">
-                    <h3>150</h3>
+                    <h3>{{ $data['payments'] }} usd</h3>
 
-                    <p>New Orders</p>
+                    <p>Total Payments</p>
                   </div>
                   <svg
                     class="small-box-icon"
@@ -66,9 +66,9 @@
                 <!--begin::Small Box Widget 2-->
                 <div class="small-box text-bg-success">
                   <div class="inner">
-                    <h3>53<sup class="fs-5">%</sup></h3>
+                    <h3>{{ @$data['subscriptions'] }}</h3>
 
-                    <p>Bounce Rate</p>
+                    <p>Active Subscriptions</p>
                   </div>
                   <svg
                     class="small-box-icon"
@@ -95,7 +95,7 @@
                 <!--begin::Small Box Widget 3-->
                 <div class="small-box text-bg-warning">
                   <div class="inner">
-                    <h3>44</h3>
+                    <h3>{{ @$data['users'] }}</h3>
 
                     <p>User Registrations</p>
                   </div>
@@ -124,9 +124,9 @@
                 <!--begin::Small Box Widget 4-->
                 <div class="small-box text-bg-danger">
                   <div class="inner">
-                    <h3>65</h3>
+                    <h3>{{ @$data['plans'] }}</h3>
 
-                    <p>Unique Visitors</p>
+                    <p>Total Plans</p>
                   </div>
                   <svg
                     class="small-box-icon"
@@ -159,7 +159,7 @@
             </div>
             <!--end::Row-->
             <!--begin::Row-->
-            <div class="row">
+            {{-- <div class="row">
               <!-- Start col -->
               <div class="col-lg-7 connectedSortable">
                 <div class="card mb-4">
@@ -463,7 +463,7 @@
                 </div>
               </div>
               <!-- /.Start col -->
-            </div>
+            </div> --}}
             <!-- /.row (main row) -->
           </div>
           <!--end::Container-->

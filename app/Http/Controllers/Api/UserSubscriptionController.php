@@ -40,8 +40,6 @@ class UserSubscriptionController extends Controller
         }
     }
 
-        
-
 
     public function makeSubscription(Request $request)
     {

@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\BenefitController;
+use App\Http\Controllers\SliderController;
+use App\Http\Controllers\ContentTypeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,6 +27,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     //plan routes
     Route::resource('plans', PlanController::class);
+    Route::resource('benefits', BenefitController::class);
+    Route::resource('sliders', SliderController::class);
+    Route::resource('contentTypes', ContentTypeController::class);
     Route::get('make-active/{id}', [PlanController::class, 'makeActive'])->name('plans.makeActive');
     Route::get('make-inactive/{id}', [PlanController::class, 'makeInactive'])->name('plans.makeInactive');
 
@@ -39,6 +45,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     //payment routes
     Route::get('/payments', [HomeController::class, 'payments'])->name('payments.index');
+
 
 
 });

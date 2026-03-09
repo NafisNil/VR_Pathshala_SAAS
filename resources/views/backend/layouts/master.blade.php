@@ -346,6 +346,7 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
         $('#image').change(function(e){

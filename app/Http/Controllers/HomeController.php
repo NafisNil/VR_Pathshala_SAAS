@@ -8,13 +8,18 @@ use App\Models\Subscription;
 use App\Models\Payment;
 use App\Models\Deviceinfo as Device;
 use Illuminate\Support\Facades\DB;
+use App\Models\Plan;
 
 class HomeController extends Controller
 {
     //
     public function index()
     {
-        return view('backend.index');
+        $data['users'] = User::count();
+        $data['subscriptions'] = Subscription::count();
+        $data['payments'] = Payment::sum('amount');
+        $data['plans'] = Plan::count();
+        return view('backend.index', compact('data'));
     }
 
 

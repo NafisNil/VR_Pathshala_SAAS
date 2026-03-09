@@ -121,11 +121,67 @@
 
                 </ul>
               </li>
-              {{-- <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-filetype-js"></i>
+
+              <li class="nav-item {{ in_array($routeName, ['sliders.index', 'sliders.create', 'sliders.edit']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['sliders.index', 'sliders.create', 'sliders.edit']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
                   <p>
-                    Javascript
+                    Sliders
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('sliders.index') }}" class="nav-link {{ $routeName === 'sliders.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>All Sliders</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+              
+              <li class="nav-item {{ in_array($routeName, ['contentTypes.index', 'contentTypes.create', 'contentTypes.edit']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['contentTypes.index', 'contentTypes.create', 'contentTypes.edit']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Content Types
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('contentTypes.index') }}" class="nav-link {{ $routeName === 'contentTypes.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>All Content Types</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+
+
+              <li class="nav-item {{ in_array($routeName, ['benefits.index', 'benefits.create', 'benefits.edit']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['benefits.index', 'benefits.create', 'benefits.edit']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Benefits
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('benefits.index') }}" class="nav-link {{ $routeName === 'benefits.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>All Benefits</p>
+                    </a>
+                  </li>
+
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -137,7 +193,7 @@
                     </a>
                   </li>
                 </ul>
-              </li> --}}
+              </li> 
      
             </ul>
             <!--end::Sidebar Menu-->
