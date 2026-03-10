@@ -1,6 +1,6 @@
 @extends('backend.layouts.master')
 @section('title')
-Benefits - Index
+Objectives - Index
 @endsection
 @section('content')
 
@@ -15,12 +15,12 @@ Benefits - Index
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6">
-                <h3 class="mb-0">Benefits</h3>
+                <h3 class="mb-0">Objectives</h3>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Benefits</li>
+                  <li class="breadcrumb-item active" aria-current="page">Objectives</li>
                   
                 </ol>
               </div>
@@ -39,8 +39,11 @@ Benefits - Index
               <div class="col-md-12">
                 <div class="card mb-4">
                   <div class="card-header">
-                    <h3 class="card-title">Benefits</h3>
-                        <a href="{{route('benefits.create')}}" class="btn btn-primary float-end"><i class="fas fa-plus"></i> Create Benefit</a>
+                    <h3 class="card-title">Objectives</h3>
+                      @if ($objectiveCount < 1)
+                          <a href="{{route('objectives.create')}}" class="btn btn-primary float-end"><i class="fas fa-plus"></i> Create Objective</a>
+                      @endif
+                        
                   </div>
                   <!-- /.card-header -->
                   <div class="card-body">
@@ -49,24 +52,24 @@ Benefits - Index
                       <thead>
                         <tr>
                           <th style="width: 10px">#</th>
-                          <th>Name</th>
+                          <th>Title</th>
                           <th>Description</th>
-                          <th>Icon</th>
+                          <th>Image</th>
                          
                           <th style="width: 40px">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        @forelse ($benefits as $item)
+                        @forelse ($objectives as $item)
                             <tr class="align-middle">
                           <td>{{ $loop->iteration }}</td>
-                          <td>{{ $item->name }}</td>
-                          <td>{{ html_entity_decode(strip_tags($item->short_description)) }}</td>
-                          <td><img src="{{ asset($item->icon) }}" alt="{{ $item->name }}" style="width: 50px; height: 50px;"></td>
+                          <td>{{ $item->title }}</td>
+                          <td>{{ html_entity_decode(strip_tags($item->description)) }}</td>
+                          <td><img src="{{ asset($item->image) }}" alt="{{ $item->title }}" style="width: 70px; height: 50px;"></td>
 
                           <td>
-                            <a href="{{ route('benefits.edit', $item->id) }}" class="btn btn-sm btn-primary mb-2" title="Edit"><i class="fas fa-edit"></i> </a>
-                            <form action="{{ route('benefits.destroy', $item->id) }}" method="POST" class="d-inline" id="delete-form-{{ $item->id }}">
+                            <a href="{{ route('objectives.edit', $item->id) }}" class="btn btn-sm btn-primary mb-2" title="Edit"><i class="fas fa-edit"></i> </a>
+                            <form action="{{ route('objectives.destroy', $item->id) }}" method="POST" class="d-inline" id="delete-form-{{ $item->id }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="button" title="Delete" class="btn btn-sm btn-danger delete-btn" data-id="{{ $item->id }}"><i class="fas fa-trash"></i> </button>
@@ -75,7 +78,7 @@ Benefits - Index
                         </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">No benefits available</td>
+                                <td colspan="7" class="text-center">No objectives available</td>
                             </tr>
                         @endforelse
                         

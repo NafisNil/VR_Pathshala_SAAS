@@ -6,6 +6,13 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\BenefitController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\ContentTypeController;
+use App\Http\Controllers\FeatureTopicController;
+use App\Http\Controllers\ObjectiveController;
+use App\Http\Controllers\MissionController;
+use App\Http\Controllers\VisionController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\QuestLinkController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -30,6 +37,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('benefits', BenefitController::class);
     Route::resource('sliders', SliderController::class);
     Route::resource('contentTypes', ContentTypeController::class);
+    Route::resource('feature_topics', FeatureTopicController::class);
+    Route::resource('objectives', ObjectiveController::class);
+    Route::resource('missions', MissionController::class);
+    Route::resource('visions', VisionController::class);
+    Route::resource('contacts', ContactController::class);
+    Route::resource('quest_links', QuestLinkController::class);
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::get('make-active/{id}', [PlanController::class, 'makeActive'])->name('plans.makeActive');
     Route::get('make-inactive/{id}', [PlanController::class, 'makeInactive'])->name('plans.makeInactive');
 

@@ -4,15 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ContentType extends Model
+class Message extends Model
 {
     //
     protected $fillable = [
         'name',
+        'email',
+        'subject',
+        'message',
     ];
-
-    public function featureTopics()
-    {
-        return $this->hasMany(FeatureTopic::class);
-    }
 }

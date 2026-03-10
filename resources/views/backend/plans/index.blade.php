@@ -62,7 +62,7 @@ Plan - Index
                             <tr class="align-middle">
                           <td>{{ $loop->iteration }}</td>
                           <td>{{ $item->name }}</td>
-                          <td>{{ strip_tags($item->description) }}</td>
+                          <td>{{ html_entity_decode(strip_tags($item->short_description)) }}</td>
                           <td>{{ $item->duration }} days</td>
                           <td>{{ $item->price }} USD</td>
                           <td>

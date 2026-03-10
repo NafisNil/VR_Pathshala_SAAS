@@ -143,6 +143,66 @@
               </li>
 
               
+              <li class="nav-item {{ in_array($routeName, ['objectives.index', 'objectives.create', 'objectives.edit']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['objectives.index', 'objectives.create', 'objectives.edit']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Objectives
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('objectives.index') }}" class="nav-link {{ $routeName === 'objectives.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Objectives</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+              <li class="nav-item {{ in_array($routeName, ['missions.index', 'missions.create', 'missions.edit']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['missions.index', 'missions.create', 'missions.edit']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Missions
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('missions.index') }}" class="nav-link {{ $routeName === 'missions.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p> Missions</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+              <li class="nav-item {{ in_array($routeName, ['visions.index', 'visions.create', 'visions.edit']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['visions.index', 'visions.create', 'visions.edit']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Visions
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('visions.index') }}" class="nav-link {{ $routeName === 'visions.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p> Visions</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
               <li class="nav-item {{ in_array($routeName, ['contentTypes.index', 'contentTypes.create', 'contentTypes.edit']) ? 'menu-open' : '' }}">
                
                 <a href="#" class="nav-link {{ in_array($routeName, ['contentTypes.index', 'contentTypes.create', 'contentTypes.edit']) ? 'menu-open' : '' }}">
@@ -163,8 +223,90 @@
                 </ul>
               </li>
 
+              <li class="nav-item {{ in_array($routeName, ['feature_topics.index', 'feature_topics.create', 'feature_topics.edit']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['feature_topics.index', 'feature_topics.create', 'feature_topics.edit']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Feature Topics
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('feature_topics.index') }}" class="nav-link {{ $routeName === 'feature_topics.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>All Feature Topics</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+              <li class="nav-item {{ in_array($routeName, ['contacts.index', 'contacts.create', 'contacts.edit']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['contacts.index', 'contacts.create', 'contacts.edit']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Contact Info
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('contacts.index') }}" class="nav-link {{ $routeName === 'contacts.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p> Contact Info</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
 
 
+              <li class="nav-item {{ in_array($routeName, ['quest_link.index', 'quest_links.create', 'quest_links.edit']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['quest_links.index', 'quest_links.create', 'quest_links.edit']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Meta Quest Link 
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('quest_links.index') }}" class="nav-link {{ $routeName === 'quest_links.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p> Meta Quest Link</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+
+              <li class="nav-item {{ in_array($routeName, ['messages.index']) ? 'menu-open' : '' }}">
+               
+                <a href="#" class="nav-link {{ in_array($routeName, ['messages.index']) ? 'menu-open' : '' }}">
+                  <i class="nav-icon bi bi-box"></i>
+                  <p>
+                    Messages from Users
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('messages.index') }}" class="nav-link {{ $routeName === 'messages.index' ? 'active' : '' }}">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p> Messages from Users</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+
+              
               <li class="nav-item {{ in_array($routeName, ['benefits.index', 'benefits.create', 'benefits.edit']) ? 'menu-open' : '' }}">
                
                 <a href="#" class="nav-link {{ in_array($routeName, ['benefits.index', 'benefits.create', 'benefits.edit']) ? 'menu-open' : '' }}">
@@ -182,7 +324,7 @@
                     </a>
                   </li>
 
-                    <i class="nav-arrow bi bi-chevron-right"></i>
+                    
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
@@ -194,6 +336,8 @@
                   </li>
                 </ul>
               </li> 
+
+
      
             </ul>
             <!--end::Sidebar Menu-->

@@ -64,7 +64,7 @@ Sliders - Index
                             <tr class="align-middle">
                           <td>{{ $loop->iteration }}</td>
                           <td>{{ $item->title }}</td>
-                          <td>{{ strip_tags($item->subtitle) }}</td>
+                          <td>{{ html_entity_decode(strip_tags($item->subtitle)) }}</td>
                           <td><img src="{{ asset($item->image) }}" alt="{{ $item->title }}" style="width: 100px; height: 50px;"></td>
 
                           <td>

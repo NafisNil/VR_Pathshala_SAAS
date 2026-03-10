@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feature_topics', function (Blueprint $table) {
+        Schema::create('missions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('short_description')->nullable();
-            $table->decimal('rating', 8, 2)->nullable()->default(0);
-            $table->integer('total_reviews')->nullable()->default(0);
+            $table->string('title');
+            $table->text('description');
             $table->string('image')->nullable();
-
-            $table->foreignId('content_type_id')->constrained('content_types')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('feature_topics');
+        Schema::dropIfExists('missions');
     }
 };
