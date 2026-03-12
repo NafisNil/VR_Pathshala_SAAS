@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Subscription;
 use App\Models\Deviceinfo as Device;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -232,6 +233,25 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Logged out successfully',
+        ]);
+    }
+
+    public function getProfileInfo(Request $request)
+    {
+        $user = User::where('email', $request->email)->where('status', 'active')->first();
+         $subscription = Subscription::where('user_id', $user->id)->latest()->first();
+        
+        return response()->json([
+            'name' => $user->name,
+            'email' => $user->email,
+            'status' => $user->status,
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at,
+            'subscription' => $subscription ? [
+                'plan_name' => $subscription->plan->name,
+                'expires_at' => $subscription->expires_at,
+            ] : null,
+             'success' => true
         ]);
     }
 }

@@ -13,11 +13,15 @@ use App\Http\Controllers\VisionController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\QuestLinkController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SubscriptionBuyController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('index');
+Route::get('/', [FrontendController::class, 'index'])->name('index');
+Route::get('/feature-topics', [FrontendController::class, 'featureTopics'])->name('featureTopics');
+Route::get('/abouts', [FrontendController::class, 'abouts'])->name('abouts');
+Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
 
 
 
@@ -62,6 +66,46 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 
 
+});
+
+
+//user routes
+Route::post('message-send', [MessageController::class, 'store'])->name('message.send');
+
+Route::get('user-login',[UserController::class, 'login_form'])->name('login.form');
+Route::post('user-login', [UserController::class, 'login'])->name('user.login');
+Route::post('user-logout', [UserController::class, 'logout'])->name('user.logout');
+Route::get('user-registration', [UserController::class, 'registration_form'])->name('registration.form');
+Route::post('user-registration', [UserController::class, 'registration'])->name('registration');
+Route::get('otp-verification', [UserController::class, 'otp_form'])->name('otp.form');
+Route::post('otp-verification', [UserController::class, 'verify_otp'])->name('otp.verify');
+Route::get('/forget-password-form', [UserController::class, 'forgetPasswordForm'])->name('forget.password.form');
+Route::post('/forget-password-store', [UserController::class, 'forgetPassword'])->name('forget.password.store');
+
+Route::get('/forget-password-request', [UserController::class, 'forgetPasswordRequestForm'])->name('forget.password.otp.form');
+Route::post('/forget-password-request', [UserController::class, 'forgetPasswordRequest'])->name('forget.password.otp.request');
+
+Route::get('/confirm-password-form', [UserController::class, 'confirmPasswordForm'])->name('confirm.password.form');
+Route::post('/confirm-password-store', [UserController::class, 'confirmPassword'])->name('confirm.password.store');
+
+Route::middleware(['auth', 'user'])->group(function () {
+    // User routes go here
+    Route::get('/user-dashboard', [UserController::class, 'userDashboard'])->name('user.dashboard');
+    Route::get('/user-profile', [UserController::class, 'userProfile'])->name('user.profile');
+    Route::put('/user-profile-update', [UserController::class, 'updateProfile'])->name('user.profile.update');
+
+    Route::get('/payment-history', [UserController::class, 'paymentHistory'])->name('payment.history');
+    Route::get('/content-rating', [UserController::class, 'contentRatingForm'])->name('content-rating-form');
+    Route::post('/content-rating', [UserController::class, 'submitContentRating'])->name('submit-content-rating');
+
+    Route::get('/password-change-form', [UserController::class, 'passwordChangeForm'])->name('password.change.form');
+    Route::put('/password-change', [UserController::class, 'changePassword'])->name('password.change');
+
+    Route::get('/unlink-devices', [UserController::class, 'unlinkDevices'])->name('unlink.devices');
+    Route::get('/buy-subscription/{planId}', [SubscriptionBuyController::class, 'buySubscription'])->name('buy.subscription');
+
+   
+    
 });
 
 

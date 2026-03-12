@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Subscription;
 use App\Models\Payment;
+use App\Mail\PasswordChangeMail as PasswordChange; 
 
 class UserSubscriptionController extends Controller
 {
@@ -56,7 +57,7 @@ class UserSubscriptionController extends Controller
                 'user_id' => $user->id,
                 'plan_id' => $request->plan_id,
                 'started_at' => now(),
-                'expires_at' => now()->addDays(30),
+                'expires_at' => now()->addDays($plan->duration),
                 'status' => 'active',
             ]);
 
@@ -92,5 +93,35 @@ class UserSubscriptionController extends Controller
             'message' => 'User not found or inactive',
             ]), 404);
         }
+    }
+
+
+    //change password
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'current_password' => 'required',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $user = User::where('email', $request->email)->where('status', 'active')->first();
+        $this->checkActive($user);
+
+        if (!\Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Current password is incorrect',
+            ], 400);
+        }
+
+        $user->password = bcrypt($request->password);
+        $user->save();
+        // Send password change email
+        \Mail::to($user->email)->send(new PasswordChange($user));
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password changed successfully',
+        ]);
     }
 }

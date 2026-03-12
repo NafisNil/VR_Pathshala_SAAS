@@ -1,4 +1,6 @@
 @props(['title'])
+
+
 <!doctype html>
 <html lang="en">
   <!--begin::Head-->

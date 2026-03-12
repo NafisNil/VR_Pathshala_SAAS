@@ -13,4 +13,18 @@ class MessageController extends Controller
         $messages = Message::latest()->get();
         return view('backend.messages.index', compact('messages'));
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'subject' => 'required|max:100',
+            'message' => 'required',
+        ]);
+
+        Message::create($request->all());
+
+        return redirect()->back()->with('success', 'Message sent successfully!');
+    }
 }

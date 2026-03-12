@@ -30,6 +30,9 @@ Route::post('/make-subscription', [UserSubscriptionController::class, 'makeSubsc
 
 //user info
 Route::get('/user-info', [AuthController::class, 'userInfo']);
+//change password
+Route::post('/change-password', [UserSubscriptionController::class, 'changePassword']);
+Route::get('/get-profile-info', [AuthController::class, 'getProfileInfo']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
