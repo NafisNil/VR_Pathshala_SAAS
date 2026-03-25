@@ -13,7 +13,7 @@
                                 </div>
                                 <div class="footer-tittle">
                                     <div class="footer-pera">
-                                        <p>{!! Str::before($objectives->description, '.') !!}</p>
+                                        <p>{!! Str::before(@$objectives->description, '.') !!}</p>
                                     </div>
                                 </div>
                                 <!-- social -->

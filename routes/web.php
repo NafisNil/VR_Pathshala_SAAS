@@ -16,6 +16,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SubscriptionBuyController;
+use App\Http\Controllers\SslCommerzPaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontendController::class, 'index'])->name('index');
@@ -109,6 +110,21 @@ Route::middleware(['auth', 'user'])->group(function () {
 });
 
 
+
+//sslcommerz routes
+
+Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
+Route::get('/payment-form', [SslCommerzPaymentController::class, 'exampleHostedCheckout'])->name('payment.form');
+
+Route::post('/pay', [SslCommerzPaymentController::class, 'index']);
+Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+Route::post('/success', [SslCommerzPaymentController::class, 'success'])->name('payment.success');
+Route::post('/fail', [SslCommerzPaymentController::class, 'fail'])->name('payment.fail');
+Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel'])->name('payment.cancel');
+
+Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn'])->name('payment.ipn');
+//SSLCOMMERZ END
 
 
 

@@ -102,8 +102,8 @@
                     <!-- section tittle -->
                     <div class="section-tittle section-tittle2 mb-55">
                         <div class="front-text">
-                            <h2 class="">{{ $objectives->title }}</h2>
-                            <p>{!! $objectives->description !!}</p>
+                            <h2 class="">{{ @$objectives->title }}</h2>
+                            <p>{!! @$objectives->description !!}</p>
                         </div>
                     </div>
 
@@ -111,7 +111,7 @@
                 <div class="right-content1">
                     <!-- img -->
                     <div class="right-img">
-                        <img src="{{ $objectives->image }}" alt="Crosscheck Objective" style="max-width:720px;max-height:550;border-radius:5px">
+                        <img src="{{ @$objectives->image }}" alt="Crosscheck Objective" style="max-width:720px;max-height:550;border-radius:5px">
                         
                     </div>
                 </div>
@@ -377,7 +377,7 @@
         <!-- About Area End -->
 
         <!-- Download Banner Area Start -->
-        <section class="download-banner-area" style="background-image: url('{{ asset($quest_links->image) }}'); background-size: cover; background-position: center; padding: 100px 0; background-color: #f7f7f7;">
+        <section class="download-banner-area" style="background-image: url('{{ asset(@$quest_links->image) }}'); background-size: cover; background-position: center; padding: 100px 0; background-color: #f7f7f7;">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-8 col-lg-8">
