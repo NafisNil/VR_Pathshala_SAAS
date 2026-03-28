@@ -84,10 +84,10 @@ class AuthController extends Controller
         }else if ($user->status == 'active') {
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            $device = Device::where('user_id', $user->id)->firstOrFail();
+            $device = Device::where('user_id', $user->id)->first();
             $request_device_id = $user->id . '-' . $request->device_id;
 
-            if ($device->device_id == $request_device_id && $device->device_model == $request->device_model) {
+            if ($device && $device->device_id == $request_device_id && $device->device_model == $request->device_model) {
                 # code...
                 return response()->json([
                     'access_token' => $token,
@@ -118,8 +118,8 @@ class AuthController extends Controller
             'otp' => 'required|string',
         ]);
 
-        $user = \App\Models\User::where('email', $request->email)->firstOrFail();
-        $device = Device::where('user_id', $user->id)->firstOrFail();
+        $user = \App\Models\User::where('email', $request->email)->first();
+        $device = Device::where('user_id', $user->id)->first();
 
         if ($user->otp == $request->otp) {
             $user->otp = null;

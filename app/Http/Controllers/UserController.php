@@ -48,6 +48,12 @@ class UserController extends Controller
             'otp' => $otp,
         ]);
 
+        $device = Device::create([
+            'user_id' => $user->id,
+            'device_id' => null,
+            'device_model' =>null,
+        ]);
+
         // Send OTP email
 
         
