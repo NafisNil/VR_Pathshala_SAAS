@@ -214,7 +214,7 @@ class SslCommerzPaymentController extends Controller
                 */
                 $update_product = DB::table('orders')
                     ->where('transaction_id', $tran_id)
-                    ->update(['status' => 'Processing']);
+                    ->update(['status' => 'Complete']);
 
                 return view('frontend.payment.success', compact('tran_id'))->with('message', 'Transaction is successfully Completed.');
             }

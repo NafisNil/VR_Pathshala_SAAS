@@ -87,24 +87,41 @@ class AuthController extends Controller
             $device = Device::where('user_id', $user->id)->first();
             $request_device_id = $user->id . '-' . $request->device_id;
 
-            if ($device && $device->device_id == $request_device_id && $device->device_model == $request->device_model) {
-                # code...
+
+            if($device->device_id == null && $device->device_model == null){
+                $device->device_id = $user->id . '-' . ($request->device_id ?? Str::random(64));
+                $device->device_model = $request->device_model ?? 'Unknown';
+                $device->save();
                 return response()->json([
                     'access_token' => $token,
                     'token_type' => 'Bearer',
-                    'status' => 'verified_same_device',
-                    'message' => 'Logged in successfully from the same device',
+                    'status' => 'add_new_device',
+                    'message' => 'Logged in successfully from a new device and associated with your account',
                     'email' => $user->email
                 ]);
+
             }else{
-                return response()->json([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-                'status' => 'verified_new_device',
-                'message' => 'Logged in successfully from a new device',
-                'email' => $user->email
-                ]);
+                if ($device && $device->device_id == $request_device_id && $device->device_model == $request->device_model) {
+                    # code...
+                    return response()->json([
+                        'access_token' => $token,
+                        'token_type' => 'Bearer',
+                        'status' => 'verified_same_device',
+                        'message' => 'Logged in successfully from the same device',
+                        'email' => $user->email
+                    ]);
+                }else{
+                    return response()->json([
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                    'status' => 'verified_new_device',
+                    'message' => 'Logged in successfully from a new device',
+                    'email' => $user->email
+                    ]);
+                }
             }
+
+
         }
         
     }
