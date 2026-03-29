@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Subscription;
 use App\Models\Payment;
 use App\Mail\PasswordChangeMail as PasswordChange; 
+use Carbon\Carbon;
 
 class UserSubscriptionController extends Controller
 {
@@ -81,6 +82,36 @@ class UserSubscriptionController extends Controller
             'planName' => $subscription->plan->name,
             'expires_at' => $subscription->expires_at,
         ]);
+    }
+
+
+    public function cancelSubscription(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->where('status', 'active')->first();
+        $this->checkActive($user);
+
+        $subscription = Subscription::where('user_id', $user->id)->where('status', 'active')->first();
+        $date_remaining = $subscription ? Carbon::now()->diffInDays($subscription->expires_at) : 0;
+
+        if ($subscription) {
+            $subscription->update([
+                 'expires_at' => now()->addDays($date_remaining),
+            ]);
+
+            return response()->json([
+                'message' => 'Your subscription has been cancelled and will remain active until ' . $subscription->expires_at->format('d M, Y'),
+                'status' => 'success',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'No active subscription found.',
+            'status' => 'error',
+        ], 404);
     }
 
 

@@ -48,6 +48,7 @@
                                     <th scope="col" style="font-weight: 500; font-size: 14px; text-transform: uppercase;">Plan</th>
                                     <th scope="col" style="font-weight: 500; font-size: 14px; text-transform: uppercase;">Amount</th>
                                     <th scope="col" style="font-weight: 500; font-size: 14px; text-transform: uppercase;">Status</th>
+                                    <th scope="col" style="font-weight: 500; font-size: 14px; text-transform: uppercase;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,6 +70,11 @@
                                             @else
                                                  <span class="badge badge-secondary" style="background-color: #6c757d; font-size: 12px; padding: 5px 10px;">{{ ucfirst($item->status) }}</span>
                                             @endif
+                                    </td>
+                                    <td style="color: #555; vertical-align: middle;">
+                                        <a href="{{ route('sslcommerz.payment.history', $item->id) }}" class="px-3 py-1.5 text-sm" style="font-size: 12px; padding: 5px 10px; color:#555"><i class="fa fa-eye"></i></a>
+
+                                        <a href="{{ route('sslcommerz.payment.download', $item->id) }}" class="px-3 py-1.5 text-sm" style="font-size: 12px; padding: 5px 10px; color:#555"><i class="fa fa-download"></i></a>
                                     </td>
                                 </tr>
                                 @endforeach

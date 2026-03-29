@@ -2,7 +2,7 @@
                 <div class="d-flex flex-column nav-sidebar" style="gap: 25px;">
                     <a href="{{ route('user.dashboard') }}" class="text-dark" style="font-weight: 600; font-size: 15px; letter-spacing: 1px;">DASHBOARD</a>
                     <a href="{{ route('user.profile') }}" class="text-dark" style="font-weight: 600; font-size: 15px; letter-spacing: 1px;">PROFILE EDIT</a>
-                    <a href="#" class="text-dark" style="font-weight: 600; font-size: 15px; letter-spacing: 1px;">PAYMENT METHODS</a>
+                    <a href="{{ route('billing-address.create') }}" class="text-dark" style="font-weight: 600; font-size: 15px; letter-spacing: 1px;">BILLING ADDRESS</a>
                     <a href="{{ route('payment.history') }}" class="text-dark" style="font-weight: 600; font-size: 15px; letter-spacing: 1px;">PAYMENT HISTORY</a>
                     <a href="{{ route('content-rating-form') }}" class="text-dark" style="font-weight: 600; font-size: 15px; letter-spacing: 1px;">CONTENT RATING</a>
                     

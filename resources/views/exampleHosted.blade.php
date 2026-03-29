@@ -8,7 +8,7 @@
         <h2>Hosted Payment - VR Pathshala</h2>
         {{-- <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. We have provided this sample form for understanding Hosted Checkout Payment with VR Pathshala.</p> --}}
     </div>
-
+    
     <div class="row">
         <div class="col-md-4 order-md-2 mb-4">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -58,7 +58,7 @@
                             <span class="input-group-text">+88</span>
                         </div>
                         <input type="text" name="customer_mobile" class="form-control" id="mobile" placeholder="Mobile"
-                               value="{{ @$user->phone }}" required>
+                               value="{{ @$billing_address->mobile }}" required>
                         @error('customer_mobile')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -81,8 +81,8 @@
 
                 <div class="mb-3">
                     <label for="address">Address</label>
-                    <input type="text" name="customer_address" class="form-control" id="address" placeholder="1234 Main St"
-                           required>
+                    <input type="text" name="customer_address" class="form-control" id="address"  placeholder="1234 Main St"
+                           value="{{ @$billing_address->address_line1 }}" required>
                     @error('customer_address')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -92,7 +92,7 @@
 
                 <div class="mb-3">
                     <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
-                    <input type="text" name="customer_address2" class="form-control" id="address2" placeholder="Apartment or suite">
+                    <input type="text" name="customer_address2" class="form-control" id="address2" placeholder="Apartment or suite" value="{{ @$billing_address->address_line2 }}">
                     @error('customer_address2')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -128,7 +128,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="zip">Zip</label>
-                        <input type="text" name="customer_zip" class="form-control" id="zip" name="zip" placeholder="" required>
+                        <input type="text" name="customer_zip" class="form-control" id="zip" name="zip" placeholder="" value="{{ @$billing_address->zip }}" required>
                         @error('customer_zip')
                         <div class="invalid-feedback">
                             {{ $message }}

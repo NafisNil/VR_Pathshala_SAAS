@@ -27,6 +27,7 @@ Route::post('/unlink-device-confirm', [AuthController::class, 'unlinkDeviceConfi
 //check subscription
 Route::get('/check-subscription', [UserSubscriptionController::class, 'checkSubscription']);
 Route::post('/make-subscription', [UserSubscriptionController::class, 'makeSubscription']);
+Route::post('/cancel-subscription', [UserSubscriptionController::class, 'cancelSubscription']);
 
 //user info
 Route::get('/user-info', [AuthController::class, 'userInfo']);

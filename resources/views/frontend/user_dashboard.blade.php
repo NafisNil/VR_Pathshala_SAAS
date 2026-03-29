@@ -55,7 +55,7 @@
 
                     <hr style="margin: 30px 0;">
                     <p style="font-size: 16px; color: #333; margin-bottom: 25px;">
-                        <strong style="color: #000;">Subscription Plan:</strong> {{ $subscription ? $subscription->plan->name : 'No active subscription' }}
+                        <strong style="color: #000;">Subscription Plan:</strong> {{ $subscription ? $subscription->plan->name : 'No active subscription' }} &nbsp; (<a href="{{ route('cancel.subscription') }}" title="Cancel Subscription" style="color: #007bff; text-decoration: none;">Cancel</a>)
                         <br>
                         @php
                             $nextBillingDate = @$subscription->expires_at

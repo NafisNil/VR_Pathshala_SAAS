@@ -68,4 +68,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Device::class);
     }
+
+    public function billingAddress()
+    {
+        return $this->hasOne(BillingAddress::class);
+    }
 }

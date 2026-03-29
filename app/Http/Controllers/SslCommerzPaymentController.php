@@ -10,6 +10,10 @@ use App\Models\Payment;
 use App\Models\Plan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Spatie\LaravelPdf\Facades\Pdf;
+use App\Mail\PaymentMail;
+use Illuminate\Support\Facades\Mail;
 
 class SslCommerzPaymentController extends Controller
 {
@@ -22,8 +26,9 @@ class SslCommerzPaymentController extends Controller
     public function exampleHostedCheckout()
     {
         $plan = session('plan');
+        $billing_address = session('billing_address');
         $user = auth()->user();
-        return view('exampleHosted', compact('plan','user'));
+        return view('exampleHosted', compact('plan','user', 'billing_address'));
     }
 
     public function index(Request $request)
@@ -94,7 +99,7 @@ class SslCommerzPaymentController extends Controller
                 'plan_id' => $request->plan_id,
                 'started_at' => Carbon::now(),
                 'expires_at' => Carbon::now()->addDays($plan_duration), 
-                'status' => 'active',
+                'status' => 'inactive',
             ]);
 
             // Create a payment record
@@ -104,7 +109,7 @@ class SslCommerzPaymentController extends Controller
                 'amount' => $request->total_amount,
                 'payment_method' => 'sslcommerze', // Assuming a default payment method
                 'transaction_id' =>  $post_data['tran_id'], // Generate a unique transaction ID
-                'status' => 'completed',
+                'status' => 'pending',
             ]);
         });
 
@@ -212,9 +217,35 @@ class SslCommerzPaymentController extends Controller
                 in order table as Processing or Complete.
                 Here you can also sent sms or email for successfull transaction to customer
                 */
-                $update_product = DB::table('orders')
-                    ->where('transaction_id', $tran_id)
-                    ->update(['status' => 'Complete']);
+                DB::transaction(function () use ($tran_id, $amount, $currency) {
+                    $update_product = DB::table('orders')
+                        ->where('transaction_id', $tran_id)
+                        ->update(['status' => 'Complete']);
+                    $payment = Payment::where('transaction_id', $tran_id)->first();
+                    $user_id = $payment->user_id;
+                    
+                    if ($payment) {
+                        $payment->status = 'completed';
+                        $payment->save();
+                    }
+
+                    $subscription = Subscription::where('user_id', $user_id)->first();
+                    if ($subscription) {
+                        $subscription->status = 'active';
+                        $subscription->save();
+                    }
+                    
+                    $paymentDetails = [
+                        'transaction_id' => $tran_id,
+                        'amount' => $amount,
+                        'currency' => $currency,
+                        'date' => Carbon::now()->format('F d, Y h:i A'),
+                        'plan_name' => $payment->plan->name ?? 'Subscription Plan',
+                    ];
+
+                    Mail::to($payment->user->email)->send(new PaymentMail($paymentDetails));
+                });
+
 
                 return view('frontend.payment.success', compact('tran_id'))->with('message', 'Transaction is successfully Completed.');
             }
@@ -315,6 +346,65 @@ class SslCommerzPaymentController extends Controller
         } else {
             echo "Invalid Data";
         }
+    }
+
+    //get transaction details
+    public function getTransactionHistory($payment_id)
+    {
+        $tran_id = Payment::where('id', $payment_id)->value('transaction_id');
+        $store_id = env('SSLCZ_STORE_ID');
+        $store_passwd = env('SSLCZ_STORE_PASSWORD');
+        
+        // Check if you are in sandbox or live mode
+        $url = "https://sandbox.sslcommerz.com/validator/api/merchantTransIDvalidationAPI.php";
+        
+        $response = Http::get($url, [
+            'tran_id' => $tran_id,
+            'store_id' => $store_id,
+            'store_passwd' => $store_passwd,
+            'format' => 'json'
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            
+            //return $data; 
+            return view('frontend.payment.show_receipt', compact('data'));
+        }
+
+        return response()->json(['error' => 'Unable to fetch data'], 500);
+    }
+
+
+    //download transaction receipt
+    public function downloadTransactionReceipt($payment_id){
+        $tran_id = Payment::where('id', $payment_id)->value('transaction_id');
+        $store_id = env('SSLCZ_STORE_ID');
+        $store_passwd = env('SSLCZ_STORE_PASSWORD');
+        
+        // Check if you are in sandbox or live mode
+        $url = "https://sandbox.sslcommerz.com/validator/api/merchantTransIDvalidationAPI.php";
+        
+        $response = Http::get($url, [
+            'tran_id' => $tran_id,
+            'store_id' => $store_id,
+            'store_passwd' => $store_passwd,
+            'format' => 'json'
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            
+            // Generate PDF receipt using the data
+            // You can use a package like Dompdf or Snappy to create the PDF
+            // For simplicity, let's assume you have a view called 'receipt' that formats the data
+            
+            return Pdf::view('frontend.payment.download_receipt', compact('data'))
+            ->format('a4')
+            ->name("invoice-{$tran_id}.pdf");
+        }
+
+        return response()->json(['error' => 'Unable to fetch data'], 500);
     }
 
 }

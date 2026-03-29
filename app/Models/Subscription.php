@@ -33,4 +33,20 @@ class Subscription extends Model
     }
 
 
+    public function isActive()
+    {
+        // If it's inactive, it's dead.
+        if ($this->status === 'inactive') {
+            return false;
+        }
+
+        // If it's active but has an end date, check if that date has passed
+        if ($this->expires_at && now()->greaterThan($this->expires_at)) {
+            return false;
+        }
+
+        return true;
+    }
+
+
 }
