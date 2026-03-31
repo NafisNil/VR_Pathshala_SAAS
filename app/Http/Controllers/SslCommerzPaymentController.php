@@ -369,7 +369,7 @@ class SslCommerzPaymentController extends Controller
             $data = $response->json();
             
             //return $data; 
-            return view('frontend.payment.show_receipt', compact('data'));
+            return view('frontend.payment.show_receipt', compact('data', 'payment_id'));
         }
 
         return response()->json(['error' => 'Unable to fetch data'], 500);
@@ -394,7 +394,7 @@ class SslCommerzPaymentController extends Controller
 
         if ($response->successful()) {
             $data = $response->json();
-            
+           
             // Generate PDF receipt using the data
             // You can use a package like Dompdf or Snappy to create the PDF
             // For simplicity, let's assume you have a view called 'receipt' that formats the data

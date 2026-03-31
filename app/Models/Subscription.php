@@ -18,6 +18,10 @@ class Subscription extends Model
         'cancel_req'
     ];
 
+    protected $casts = [
+        'expires_at' => 'date',
+        'started_at' => 'date',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);

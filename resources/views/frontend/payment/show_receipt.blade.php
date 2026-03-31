@@ -88,9 +88,12 @@
                             </div>
                             
                             <div class="mt-4 text-center">
-                                <button onclick="window.print()" class="btn btn-primary" style="background-color: #0056b3; border-color: #0056b3;">
+                                <a href="{{ route('sslcommerz.payment.download', $payment_id) }}" class="btn btn-primary" style="background-color: #0056b3; border-color: #0056b3;">
+                                    Download Receipt
+                                </a>
+                                {{-- <button onclick="window.print()" class="btn btn-primary" style="background-color: #0056b3; border-color: #0056b3;">
                                     Print Receipt
-                                </button>
+                                </button> --}}
                                 <a href="{{ route('payment.history') }}" class="btn btn-outline-secondary ml-3">
                                     Back to History
                                 </a>

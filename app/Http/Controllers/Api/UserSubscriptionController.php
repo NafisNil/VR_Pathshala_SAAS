@@ -100,6 +100,7 @@ class UserSubscriptionController extends Controller
         if ($subscription) {
             $subscription->update([
                  'expires_at' => now()->addDays($date_remaining),
+                 'cancel_req' => true,
             ]);
 
             return response()->json([
@@ -153,6 +154,36 @@ class UserSubscriptionController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Password changed successfully',
+        ]);
+    }
+
+
+    //cancel request check
+    public function cancelRequestCheck(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->where('status', 'active')->first();
+        $this->checkActive($user);
+
+        $subscription = Subscription::where('user_id', $user->id)->where('cancel_req', true)->first();
+
+        if ($subscription) {
+            // return response()->json([
+            //     'message' => 'You have requested cancellation. Your subscription will remain active until ' . $subscription->expires_at,
+            //     'status' => 'cancellation_requested',
+            // ]);
+            return response()->json([
+                'message' => 'You have requested cancellation. Your subscription will remain active until ' . $subscription->expires_at->format('d M, Y'),
+                'status' => 'cancellation_requested',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'No cancellation request found.',
+            'status' => 'not_cancellation_requested',
         ]);
     }
 }

@@ -253,22 +253,64 @@ class AuthController extends Controller
         ]);
     }
 
+    // public function getProfileInfo(Request $request)
+    // {
+    //     $user = User::where('email', $request->email)->where('status', 'active')->first();
+    //      $subscription = Subscription::where('user_id', $user->id)->latest()->first();
+        
+    //     return response()->json([
+    //         'name' => $user->name,
+    //         'email' => $user->email,
+    //         'status' => $user->status,
+    //         'created_at' => $user->created_at,
+    //         'updated_at' => $user->updated_at,
+    //         'subscription' => $subscription ? [
+    //             'plan_name' => $subscription->plan->name,
+    //             'expires_at' => $subscription->expires_at,
+                
+    //         ] : null,
+    //          'success' => true
+    //     ]);
+    // }
+
+
     public function getProfileInfo(Request $request)
     {
-        $user = User::where('email', $request->email)->where('status', 'active')->first();
-         $subscription = Subscription::where('user_id', $user->id)->latest()->first();
-        
+        $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $request->email)
+                    ->where('status', 'active')
+                    ->first();
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not found'], 404);
+        }
+
+        // Fetch Subscription with Plan relation to avoid extra queries (Eager Loading)
+        $subscription = Subscription::with('plan')
+                                    ->where('user_id', $user->id)
+                                    ->latest()
+                                    ->first();
+
+        // Prepare Subscription Data
+        $subData = null;
+        if ($subscription) {
+            $subData = [
+                'plan_name'  => $subscription->plan->name ?? 'N/A',
+                'expires_at' => $subscription->expires_at ? $subscription->expires_at->format('d M, Y') : null,
+                'is_cancellation_requested' => (bool)$subscription->cancel_req, 
+                'message' => $subscription->cancel_req ? 'You have requested cancellation. Your subscription will remain active until ' . ($subscription->expires_at ? $subscription->expires_at->format('d M, Y') : 'N/A') : null,
+            ];
+        }
+
         return response()->json([
-            'name' => $user->name,
-            'email' => $user->email,
-            'status' => $user->status,
-            'created_at' => $user->created_at,
-            'updated_at' => $user->updated_at,
-            'subscription' => $subscription ? [
-                'plan_name' => $subscription->plan->name,
-                'expires_at' => $subscription->expires_at,
-            ] : null,
-             'success' => true
+            'success'      => true,
+            'name'         => $user->name,
+            'email'        => $user->email,
+            'status'       => $user->status,
+            'created_at'   => $user->created_at->format('d M, Y'),
+            'updated_at'   => $user->updated_at->format('d M, Y'),
+            'subscription' => $subData,
         ]);
     }
 }
