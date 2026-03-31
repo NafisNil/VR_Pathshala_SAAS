@@ -55,13 +55,21 @@
 
                     <hr style="margin: 30px 0;">
                     <p style="font-size: 16px; color: #333; margin-bottom: 25px;">
-                        <strong style="color: #000;">Subscription Plan:</strong> {{ $subscription ? $subscription->plan->name : 'No active subscription' }} &nbsp; (<a href="{{ route('cancel.subscription') }}" title="Cancel Subscription" style="color: #007bff; text-decoration: none;">Cancel</a>)
+                        <strong style="color: #000;">Subscription Plan:</strong> {{ $subscription ? $subscription->plan->name : 'No active subscription' }} &nbsp; 
+                        @if($subscription && !$subscription->cancel_req)
+                            (<a href="{{ route('cancel.subscription') }}" title="Cancel Subscription" style="color: #007bff; text-decoration: none;">Cancel</a>)
+                        @elseif($subscription && $subscription->cancel_req)
+                            (Cancellation Requested)
+                        @endif
                         <br>
                         @php
                             $nextBillingDate = @$subscription->expires_at
                         @endphp
-                        @if($subscription && $subscription->expires_at)
+                        @if($subscription && $subscription->expires_at && $subscription->cancel_req == false)
                             <strong style="color: #000;">Next Billing Date:</strong> {{ \Carbon\Carbon::parse( $nextBillingDate)->format('j F, Y') }}
+                        @elseif($subscription && $subscription->expires_at && $subscription->cancel_req)
+                            <strong style="color: #000;">Subscription Expiry Date:</strong> {{ \Carbon\Carbon::parse( $nextBillingDate)->format('j F, Y') }}
+                         
                         @endif
 
                     </p>

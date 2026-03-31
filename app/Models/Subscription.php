@@ -15,6 +15,7 @@ class Subscription extends Model
         'expires_at',
         'started_at',
         'status',
+        'cancel_req'
     ];
 
     public function user()

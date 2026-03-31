@@ -45,6 +45,7 @@ class SubscriptionBuyController extends Controller
         if ($subscription) {
             $subscription->update([
                 'expires_at' => now()->addDays($date_remaining),
+                'cancel_req' => true,
             ]);
 
             return back()->with('message', 'Your subscription will remain active until ' . $subscription->expires_at->format('d M, Y'));
