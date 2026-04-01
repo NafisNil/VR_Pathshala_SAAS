@@ -103,10 +103,7 @@
                 <div class="row">
                     <div class="col-md-5 mb-3">
                         <label for="country">Country</label>
-                        <select class="custom-select w-100" id="country" name="country" required>
-                            <option value="">Choose...</option>
-                            <option value="Bangladesh">Bangladesh</option>
-                        </select>
+                        <input type="text" name="customer_country" class="form-control" id="country" placeholder="Country" value="{{ @$billing_address->country }}" required>
                         @error('customer_country')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -114,11 +111,8 @@
                         @enderror
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="state">State</label>
-                        <select class="custom-select w-100" id="state" name="state" required>
-                            <option value="">Choose...</option>
-                            <option value="Dhaka">Dhaka</option>
-                        </select>
+                        <label for="state">City</label>
+                        <input type="text" name="customer_state" class="form-control" id="state" placeholder="City" value="{{ @$billing_address->state }}">
                         @error('customer_state')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -126,7 +120,7 @@
                         @enderror
 
                     </div>
-                    <div class="col-md-3 mb-3">
+                    {{-- <div class="col-md-3 mb-3">
                         <label for="zip">Zip</label>
                         <input type="text" name="customer_zip" class="form-control" id="zip" name="zip" placeholder="" value="{{ @$billing_address->zip }}" required>
                         @error('customer_zip')
@@ -134,7 +128,7 @@
                             {{ $message }}
                         </div>
                         @enderror
-                    </div>
+                    </div> --}}
                 </div>
                 <hr class="mb-4">
                 <div class="custom-control custom-checkbox">

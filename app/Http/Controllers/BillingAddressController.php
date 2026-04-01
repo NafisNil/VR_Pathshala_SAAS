@@ -38,7 +38,7 @@ class BillingAddressController extends Controller
             'address_line1' => 'required|string|max:255',
             'address_line2' => 'nullable|string|max:255',
             'mobile' => 'required|string|max:20',
-            'zip' => 'required|string|max:10',
+           
             'country' => 'required|string|max:100',
             'state' => 'nullable|string|max:100',
         ]);

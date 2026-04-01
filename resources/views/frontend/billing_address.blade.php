@@ -79,16 +79,16 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="state" style="font-weight: 500; font-size: 14px;">State/Region</label>
+                                <label for="state" style="font-weight: 500; font-size: 14px;">City <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="state" name="state" value="{{ old('state', $billingAddress->state ?? '') }}" placeholder="California">
                                 @error('state')<span class="text-danger small">{{ $message }}</span>@enderror
                             </div>
-
+{{-- 
                             <div class="col-md-6 mb-3">
                                 <label for="zip" style="font-weight: 500; font-size: 14px;">ZIP Code <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="zip" name="zip" value="{{ old('zip', $billingAddress->zip ?? '') }}" required placeholder="90001">
                                 @error('zip')<span class="text-danger small">{{ $message }}</span>@enderror
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="mt-4">
