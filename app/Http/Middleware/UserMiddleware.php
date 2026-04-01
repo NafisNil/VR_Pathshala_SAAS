@@ -15,6 +15,9 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        if (auth()->check() && auth()->user()->role === 'user') {
+            return $next($request);
+        }
+        return redirect()->route('login.form')->with('error', 'Please login or register');
     }
 }

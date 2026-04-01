@@ -171,10 +171,7 @@ class UserSubscriptionController extends Controller
         $subscription = Subscription::where('user_id', $user->id)->where('cancel_req', true)->first();
 
         if ($subscription) {
-            // return response()->json([
-            //     'message' => 'You have requested cancellation. Your subscription will remain active until ' . $subscription->expires_at,
-            //     'status' => 'cancellation_requested',
-            // ]);
+
             return response()->json([
                 'message' => 'You have requested cancellation. Your subscription will remain active until ' . $subscription->expires_at->format('d M, Y'),
                 'status' => 'cancellation_requested',

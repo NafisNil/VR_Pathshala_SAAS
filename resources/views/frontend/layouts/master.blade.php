@@ -24,6 +24,12 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/nice-select.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}">
+
+    <style>
+        body {
+            background-color: #F8FAFA;
+        }
+    </style>
     
 </head>
 
