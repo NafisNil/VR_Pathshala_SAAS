@@ -13,6 +13,7 @@ Route::get('/user', function (Request $request) {
 //user api
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/fb-login', [AuthController::class, 'handleFacebookLogin']);
 
 //get plan
 Route::get('/plans', [PlanController::class, 'index']);

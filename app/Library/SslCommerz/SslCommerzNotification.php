@@ -194,7 +194,7 @@ class SslCommerzNotification extends AbstractSslCommerz
 
         $this->setApiUrl($this->config['apiDomain'] . $this->config['apiUrl']['make_payment']);
 
-        // Set the required/additional params
+        // Set the required/additional params 
         $this->setParams($requestData);
 
         // Set the authentication information
@@ -247,7 +247,7 @@ class SslCommerzNotification extends AbstractSslCommerz
         $this->cancelUrl = rtrim(env('APP_URL'), '/') . $this->config['cancel_url'];
     }
 
-    protected function getCancelUrl()
+    protected function getCancelUrl() 
     {
         return $this->cancelUrl;
     }

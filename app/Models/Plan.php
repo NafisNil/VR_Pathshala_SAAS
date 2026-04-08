@@ -15,6 +15,7 @@ class Plan extends Model
         'price',
         'duration',
         'status',
+        'sku',
     ];
 
     public function payments()

@@ -46,6 +46,7 @@ class PlanController extends Controller
                 'description'=>$request->description,
                 'duration'=>$request->duration,
                 'price'=>$request->price,
+                'sku'=>$request->sku,
             ]);
 
             return redirect()->route('plans.index')->with('success','Plan created successfully');
@@ -78,7 +79,7 @@ class PlanController extends Controller
         //
         $request->validate([
             'name'=>'required',
-            'description'=>'required',
+            
             'duration'=>'required',
             'price'=>'required',
         ]);
@@ -88,6 +89,7 @@ class PlanController extends Controller
             'description'=>$request->description,
             'duration'=>$request->duration,
             'price'=>$request->price,
+            'sku'=>$request->sku,
         ]);
 
         return redirect()->route('plans.index')->with('success','Plan updated successfully');   

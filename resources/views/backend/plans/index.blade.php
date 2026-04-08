@@ -53,6 +53,7 @@ Plan - Index
                           <th>Description</th>
                           <th>Duration</th>
                           <th>Price</th>
+                          <th style="width: 120px">SKU</th>
                           <th>Status</th>
                           <th style="width: 40px">Actions</th>
                         </tr>
@@ -65,6 +66,7 @@ Plan - Index
                           <td>{{ html_entity_decode(strip_tags($item->short_description)) }}</td>
                           <td>{{ $item->duration }} days</td>
                           <td>{{ $item->price }} USD</td>
+                          <td>{{ $item->sku }}</td>
                           <td>
                             @if($item->status == 1)
                                 <span class="badge bg-success">Active</span> <br>
@@ -85,7 +87,7 @@ Plan - Index
                         </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">No plans available</td>
+                                <td colspan="8" class="text-center">No plans available</td>
                             </tr>
                         @endforelse
                         

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Subscription;
 use App\Models\Payment;
+use App\Models\Plan;
 use App\Mail\PasswordChangeMail as PasswordChange; 
 use Carbon\Carbon;
 
@@ -47,16 +48,18 @@ class UserSubscriptionController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'plan_id' => 'required|exists:plans,id',
+            'plan_sku' => 'required|exists:plans,sku',
         ]);
 
         $user = User::where('email', $request->email)->where('status', 'active')->first();
         $this->checkActive($user);
 
-        [$subscription, $payment] = DB::transaction(function () use ($user, $request) {
+        $plan = Plan::where('sku', $request->plan_sku)->first();
+
+        [$subscription, $payment] = DB::transaction(function () use ($user, $plan) {
             $subscription = Subscription::create([
                 'user_id' => $user->id,
-                'plan_id' => $request->plan_id,
+                'plan_id' => $plan->id,
                 'started_at' => now(),
                 'expires_at' => now()->addDays($plan->duration),
                 'status' => 'active',
@@ -64,7 +67,7 @@ class UserSubscriptionController extends Controller
 
             $payment = Payment::create([
                 'user_id' => $user->id,
-                'plan_id' => $request->plan_id,
+                'plan_id' => $plan->id,
                 'amount' => $subscription->plan->price,
                 // 'amount' => 9.99, // For testing, you can replace this with the actual plan price
                 'transaction_id' => 'txn_' . uniqid(),

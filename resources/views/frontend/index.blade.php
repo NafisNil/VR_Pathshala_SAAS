@@ -43,7 +43,7 @@
             </div>
         </div>
         <!-- Courses area start -->
-        <div class="courses-area section-padding40 fix ">
+        <div class="courses-area section-padding40 fix mt-5">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-7 col-lg-8">

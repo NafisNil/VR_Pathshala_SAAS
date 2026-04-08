@@ -41,6 +41,18 @@
                         />
                         </div>
 
+
+                      <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">SKU</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Enter plan SKU"
+                          value="{!!old('sku',@$plan->sku)!!}"
+                          name="sku" required
+                        />
+                        </div>
+
                     </div>
                     <!--end::Body-->
                     <!--begin::Footer-->

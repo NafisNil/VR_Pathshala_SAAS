@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OTPVerificationMail as OTPMail;
+use Illuminate\Support\Facades\Http;
 
 
 class AuthController extends Controller
@@ -97,7 +98,9 @@ class AuthController extends Controller
                     'token_type' => 'Bearer',
                     'status' => 'add_new_device',
                     'message' => 'Logged in successfully from a new device and associated with your account',
-                    'email' => $user->email
+                    'email' => $user->email,
+                    'device_id' => $request->device_id,
+                    'device_model' => $request->device_model
                 ]);
 
             }else{
@@ -108,7 +111,9 @@ class AuthController extends Controller
                         'token_type' => 'Bearer',
                         'status' => 'verified_same_device',
                         'message' => 'Logged in successfully from the same device',
-                        'email' => $user->email
+                        'email' => $user->email,
+                        'device_id' => $request->device_id,
+                        'device_model' => $request->device_model
                     ]);
                 }else{
                     return response()->json([
@@ -116,7 +121,9 @@ class AuthController extends Controller
                     'token_type' => 'Bearer',
                     'status' => 'verified_new_device',
                     'message' => 'Logged in successfully from a new device',
-                    'email' => $user->email
+                    'email' => $user->email,
+                    'device_id' => $request->device_id,
+                    'device_model' => $request->device_model
                     ]);
                 }
             }
@@ -313,4 +320,76 @@ class AuthController extends Controller
             'subscription' => $subData,
         ]);
     }
+
+
+    //facebook login
+    public function handleFacebookLogin(Request $request)
+    {
+        $fbToken = $request->fb_token;
+
+        // 1. Verify token with Facebook Graph API
+        $response = Http::get("https://graph.facebook.com/me", [
+            'fields' => 'id,name,email',
+            'access_token' => $fbToken
+        ]);
+
+        if ($response->failed()) {
+            return response()->json(['message' => 'Invalid Facebook Token'], 401);
+        }
+
+        $fbData = $response->json();
+
+
+
+        // 2. Find or Create the User
+        $user = User::updateOrCreate(
+           ['email' => $fbData['email'] ?? $fbData['id'] . '@facebook.com'],
+            [
+                'name' => $fbData['name'],
+                'fb_id' => $fbData['id'],
+                'password' => bcrypt('password'), // Random password since it's not used
+                'status' => 'active', // Default for new users
+            ]
+        );
+
+        $device = Device::where('user_id', $user->id)->first();
+        if (!$device) {
+            Device::create([
+                'user_id' => $user->id,
+                'device_id' => $request->device_id ? $user->id . '-' . $request->device_id : $user->id . '-' . Str::random(64),
+                'device_model' => $request->device_model ?? 'Unknown',
+            ]);
+        }else{
+            if ($device && $device->device_id == $request->device_id && $device->device_model == $request->device_model) {
+                    # code...
+                    return response()->json([
+                        'access_token' => $token,
+                        'token_type' => 'Bearer',
+                        'status' => 'verified_same_device',
+                        'message' => 'Logged in successfully from the same device',
+                        'email' => $user->email
+                    ]);
+                }else{
+                    return response()->json([
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                    'status' => 'verified_new_device',
+                    'message' => 'Logged in successfully from a new device',
+                    'email' => $user->email
+                    ]);
+                }
+        }
+
+        // 3. Generate a token for your app (using Sanctum or Passport)
+        $token = $user->createToken('unity-app')->plainTextToken;
+
+        return response()->json([
+            'status' => 'success',
+            'token' => $token,
+            'user' => $user
+        ]);
+    }
+
+
+    
 }
