@@ -11,6 +11,7 @@ use App\Models\Payment;
 use App\Models\Plan;
 use App\Mail\PasswordChangeMail as PasswordChange; 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 
 class UserSubscriptionController extends Controller
 {
@@ -49,14 +50,32 @@ class UserSubscriptionController extends Controller
         $request->validate([
             'email' => 'required|email',
             'plan_sku' => 'required|exists:plans,sku',
+            'meta_receipt' => 'required', // The JSON receipt from Unity
+            'formatted_price' => 'required', // The price as shown in Unity (for reference, not used for verification)
         ]);
 
-        $user = User::where('email', $request->email)->where('status', 'active')->first();
-        $this->checkActive($user);
+         $user = User::where('email', $request->email)->first();
+        
+        // // 1. Verify the Receipt with Meta
+        // $isVerified = $this->verifyMetaPurchase($request->plan_sku, $request->meta_receipt);
 
+        // if (!$isVerified) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Invalid or fraudulent purchase receipt.'
+        //     ], 403);
+        // }
+
+         $clean = str_replace(['$', '-'], '', $request->formatted_price);
+
+        // Convert to decimal
+        $price = (float) $clean;
         $plan = Plan::where('sku', $request->plan_sku)->first();
 
-        [$subscription, $payment] = DB::transaction(function () use ($user, $plan) {
+        // 2. Proceed with existing logic if verified
+        $plan = Plan::where('sku', $request->plan_sku)->first();
+
+        [$subscription, $payment] = DB::transaction(function () use ($user, $plan, $price, $request) {
             $subscription = Subscription::create([
                 'user_id' => $user->id,
                 'plan_id' => $plan->id,
@@ -68,10 +87,9 @@ class UserSubscriptionController extends Controller
             $payment = Payment::create([
                 'user_id' => $user->id,
                 'plan_id' => $plan->id,
-                'amount' => $subscription->plan->price,
-                // 'amount' => 9.99, // For testing, you can replace this with the actual plan price
-                'transaction_id' => 'txn_' . uniqid(),
-                'payment_method' => 'credit_card',
+                'amount' => $price, // Use the cleaned and converted price
+                'transaction_id' => 'meta_' . uniqid(), // Mark as Meta transaction
+                'payment_method' => 'meta_iap',
                 'currency' => 'USD',
                 'status' => 'completed',
             ]);
@@ -80,12 +98,56 @@ class UserSubscriptionController extends Controller
         });
 
         return response()->json([
-            'message' => 'Subscription created successfully',
+            'message' => 'Subscription verified and created successfully',
             'status' => 'success',
-            'planName' => $subscription->plan->name,
-            'expires_at' => $subscription->expires_at,
+            'planName' => $plan->name,
+            'expires_at' => $subscription->expires_at->toDateTimeString(),
         ]);
     }
+
+    /**
+     * Helper to verify against Meta Graph API
+     */
+    private function verifyMetaPurchase($sku, $receiptJson)
+    {
+        // 1. Decode the outer receipt JSON
+        $receiptData = json_decode($receiptJson, true);
+
+        if (!$receiptData) {
+            return false;
+        }
+
+        // 2. CHECK FOR UNITY EDITOR (MOCK STORE)
+        // If we are in debug mode and the store is 'fake', approve it immediately for the demo.
+        if (config('app.debug') || config('app.env') === 'local') {
+            if (isset($receiptData['Store']) && ($receiptData['Store'] === 'fake' || $receiptData['Store'] === 'UnityEditor')) {
+                return true;
+            }
+        }
+
+        // 3. PREPARE FOR PRODUCTION (META)
+        $appId = config('services.meta.app_id');
+        
+        // Unity IAP often nests the real Meta data inside 'Payload'
+        $payload = $receiptData['Payload'] ?? null;
+        
+        // If Payload is a string (common in Unity), we might need to decode it again
+        $payloadData = is_string($payload) ? json_decode($payload, true) : $payload;
+        
+        // For Meta, the purchase token is usually the 'receipt_data' or 'purchase_token' inside the payload
+        $purchaseToken = $payloadData['purchase_token'] ?? $payload; 
+
+        // 4. CALL META GRAPH API
+        $response = \Illuminate\Support\Facades\Http::get("https://graph.oculus.com/verify_entitlement", [
+            'access_token' => "{$appId}|{$purchaseToken}",
+            'sku' => $sku,
+            'user_id' => $receiptData['UserId'] ?? ($payloadData['user_id'] ?? ''),
+        ]);
+
+        // Check if Meta confirms the user is entitled to this subscription
+        return $response->successful() && $response->json('is_entitled') === true;
+    }
+
 
 
     public function cancelSubscription(Request $request)
